@@ -1,6 +1,6 @@
 from flask import Flask, request
 from flask_jwt import JWT, jwt_required, current_identity
-from flask_json import as_json, JsonError,json_response
+from flask_json import FlaskJSON,as_json, JsonError,json_response
 from werkzeug.security import safe_str_cmp
 import ipaddress
 
@@ -39,6 +39,8 @@ app = Flask(__name__)
 app.debug = True
 app.config['SECRET_KEY'] = 'super-secret'
 
+FlaskJSON(app)
+
 jwt = JWT(app, authenticate, identity)
 
 @app.route('/job', methods=['POST'])
@@ -50,7 +52,7 @@ def post_job():
     print(req)
     try:
         cird_ip = req.get('ip_cidr')
-        print(cird_ip)
+
         if not cird_ip:
             raise JsonError(description='invalid input', status_=400)
     except (KeyError, TypeError, ValueError):
@@ -65,11 +67,11 @@ def post_job():
         raise JsonError(description='process is running', status_= 420)
 
     if check_file_exists_for_cird(cird_script_folder,cird_ip):
-        return json_response(run_summary_sh(['cd', cird_script_folder, ';', "./summarize-results.sh", 'output-'+cird_ip.replace('/','-')]))
+        return dict(result=run_summary_sh(['cd', cird_script_folder, ';', "./summarize-results.sh", 'output-'+cird_ip.replace('/','-')]))
 
     run_cird_sh(['cd', cird_script_folder, ';', "./CIDRDetail.sh", cird_ip])
 
-    return json_response(run_summary_sh(['cd', cird_script_folder, ';', "./summarize-results.sh", 'output-'+cird_ip.replace('/','-')]))
+    return dict(result='process started')
 
 if __name__ == '__main__':
     app.run()

@@ -5,6 +5,8 @@ import subprocess
 def run_cird_sh(comms):
     p = subprocess.Popen(comms, shell=True,
                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    if not p.poll():
+        print(p.stdout.read().decode('utf-8'))
     return p
 
 def run_summary_sh(comms):
@@ -17,7 +19,7 @@ def check_cird_detail_sh_running(cird_ip):
     # Iterate over the all the running process
     for proc in psutil.process_iter():
         try:
-            print(proc.cmdline())
+
             # Check if process name contains the given name string.
             if cird_ip.lower() in proc.cmdline():
                 return True

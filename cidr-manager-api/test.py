@@ -1,11 +1,9 @@
+import subprocess
 
-import ipaddress
-import sys
+comms = ['cd', 'cird_script_folder', ';', "./CIDRDetail.sh", 'cird_ip']
 
-cird_ip = "83.0.0.0/8"
-
-try:
-    p = ipaddress.ip_network(cird_ip)
-    print(p)
-except ValueError:
-    print(sys.exc_info())
+p = subprocess.Popen(comms, shell=True,
+                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+if not p.poll():
+    print('here')
+    print(p.stderr.read().decode('utf-8'))
