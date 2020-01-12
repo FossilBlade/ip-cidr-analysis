@@ -5,8 +5,8 @@ import subprocess
 def run_cird_sh(comms):
     p = subprocess.Popen(comms, shell=True,
                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    if not p.poll():
-        print(p.stdout.read().decode('utf-8'))
+    print(p.stdout.read().decode('utf-8'))
+
     return p
 
 def run_summary_sh(comms):
