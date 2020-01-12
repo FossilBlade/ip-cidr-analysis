@@ -55,7 +55,5 @@ def check_cird_detail_sh_running(cird_ip):
 
 
 def check_file_exists_for_cird(folder, cird_ip):
-    if os.path.exists(os.path.join(folder, 'output-' + cird_ip.replace('/', '-'))):
-        return True
-    else:
-        return False
+    return os.path.exists(os.path.join(folder, 'outputfile-' + cird_ip.replace('/', '-')))
+
