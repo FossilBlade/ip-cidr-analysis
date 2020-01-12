@@ -78,13 +78,15 @@ def post_job():
 
 @app.route('/report')
 # @jwt_required()
-def get_report(ip_cidr):
+def get_report():
+    ip_cidr = request.args.get('ip_cidr')
     if check_file_exists_for_cird(ip_cidr):
         return send_file(get_ip_cidr_file_path(ip_cidr),
                          mimetype='text/plain',
                          attachment_filename=f'{ip_cidr.replace("/", "-")}_detail_report.txt',
                          as_attachment=True)
-
+    else:
+        return json_response(result="invalid input")
 
 if __name__ == '__main__':
     app.run()
