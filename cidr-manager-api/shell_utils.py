@@ -7,6 +7,8 @@ def run_cird_sh(comms):
     p = subprocess.Popen(comms, shell=True,
                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
+    print(" ".join(comms))
+
     if p.stdout:
         print('here')
         print(p.stdout.read().decode('utf-8'))
