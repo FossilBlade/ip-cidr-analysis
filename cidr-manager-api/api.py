@@ -57,9 +57,9 @@ def post_job():
         raise JsonError(description='invalid request type', status_=400)
 
     try:
-        ipaddress.ip_address(cird_ip)
+        ipaddress.ip_network(cird_ip)
     except ValueError:
-        raise JsonError(description='invalid input value', status_=400)
+        raise JsonError(description='not a valid input value', status_=400)
 
     if check_cird_detail_sh_running(cird_ip):
         raise JsonError(description='process is running', status_= 420)
