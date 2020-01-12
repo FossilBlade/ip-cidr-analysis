@@ -22,12 +22,6 @@ def run_cird_sh(cird_ip):
         p = subprocess.Popen([f"./CIDRDetail.sh {cird_ip}"], shell=True,
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    # if p.stdout:
-    #     print('here')
-    #     print(p.stdout.read().decode('utf-8'))
-    # if p.stderr:
-    #     print('there')
-    #     print(p.stderr.read().decode('utf-8'))
     return p
 
 
@@ -53,7 +47,9 @@ def check_cird_detail_sh_running(cird_ip):
             pass
     return False;
 
+def get_ip_cidr_file_path(cird_ip):
+    return os.path.join(cird_script_folder, 'outputfile-' + cird_ip.replace('/', '-'))
 
-def check_file_exists_for_cird(folder, cird_ip):
-    return os.path.exists(os.path.join(folder, 'outputfile-' + cird_ip.replace('/', '-')))
+def check_file_exists_for_cird(cird_ip):
+    return os.path.exists(get_ip_cidr_file_path(cird_ip))
 

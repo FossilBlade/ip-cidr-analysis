@@ -1,10 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, send_file
 from flask_jwt import JWT, jwt_required, current_identity
 from flask_json import FlaskJSON, as_json, JsonError, json_response
 from werkzeug.security import safe_str_cmp
 import ipaddress
-
-from config import *
 
 from shell_utils import *
 
@@ -70,12 +68,22 @@ def post_job():
     if check_cird_detail_sh_running(cird_ip):
         raise JsonError(description='process is running', status_=420)
 
-    if check_file_exists_for_cird(cird_script_folder, cird_ip):
+    if check_file_exists_for_cird(cird_ip):
         return dict(result=run_summary_sh(cird_ip))
 
     run_cird_sh(cird_ip)
 
     return dict(result='process started')
+
+
+@app.route('/report')
+# @jwt_required()
+def get_report(ip_cidr):
+    if check_file_exists_for_cird(ip_cidr):
+        return send_file(get_ip_cidr_file_path(ip_cidr),
+                         mimetype='text/plain',
+                         attachment_filename=f'{ip_cidr.replace("/", "-")}_detail_report.txt',
+                         as_attachment=True)
 
 
 if __name__ == '__main__':
