@@ -47,12 +47,14 @@ jwt = JWT(app, authenticate, identity)
 def post_job():
    
     req = request.get_json(force=True)
+    print(req)
     try:
-        cird_ip = req.get('cidr')
+        cird_ip = req.get('ip_cidr')
+        print(cird_ip)
         if not cird_ip:
             raise JsonError(description='invalid input', status_=400)
     except (KeyError, TypeError, ValueError):
-        raise JsonError(description='invalid input', status_=400)
+        raise JsonError(description='invalid request type', status_=400)
 
     try:
         ipaddress.ip_address(cird_ip)
