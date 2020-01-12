@@ -2,12 +2,27 @@ import psutil
 import os
 import subprocess
 import time
+from config import *
 
-def run_cird_sh(comms):
-    p = subprocess.Popen(comms, shell=True,
+
+class cd:
+    """Context manager for changing the current working directory"""
+    def __init__(self, newPath):
+        self.newPath = os.path.expanduser(newPath)
+
+    def __enter__(self):
+        self.savedPath = os.getcwd()
+        os.chdir(self.newPath)
+
+    def __exit__(self, etype, value, traceback):
+        os.chdir(self.savedPath)
+
+def run_cird_sh(cird_ip):
+    with cd(cird_script_folder):
+        p = subprocess.Popen(["./CIDRDetail.sh", cird_ip], shell=True,
                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-    print(" ".join(comms))
+
 
     if p.stdout:
         print('here')

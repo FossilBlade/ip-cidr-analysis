@@ -69,7 +69,7 @@ def post_job():
     if check_file_exists_for_cird(cird_script_folder,cird_ip):
         return dict(result=run_summary_sh(['cd', cird_script_folder, ';', "./summarize-results.sh", 'output-'+cird_ip.replace('/','-')]))
 
-    run_cird_sh(['cd', cird_script_folder, ';', "./CIDRDetail.sh", cird_ip])
+    run_cird_sh(cird_ip)
 
     return dict(result='process started')
 
