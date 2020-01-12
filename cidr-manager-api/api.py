@@ -45,9 +45,8 @@ jwt = JWT(app, authenticate, identity)
 # @jwt_required()
 @as_json
 def post_job():
-    if not request.is_json:
-        raise JsonError(description='invalid json request',status_=415)
-    req = request.get_json()
+   
+    req = request.get_json(force=True)
     try:
         cird_ip = req.get('cidr')
         if not cird_ip:
