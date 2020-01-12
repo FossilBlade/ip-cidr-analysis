@@ -67,7 +67,7 @@ def post_job():
         raise JsonError(description='process is running', status_= 420)
 
     if check_file_exists_for_cird(cird_script_folder,cird_ip):
-        return dict(result=run_summary_sh(['cd', cird_script_folder, ';', "./summarize-results.sh", 'output-'+cird_ip.replace('/','-')]))
+        return dict(result=run_summary_sh(cird_ip))
 
     run_cird_sh(cird_ip)
 

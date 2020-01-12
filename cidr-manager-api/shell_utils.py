@@ -19,8 +19,8 @@ class cd:
 
 def run_cird_sh(cird_ip):
     with cd(cird_script_folder):
-        p = subprocess.Popen(["./CIDRDetail.sh", cird_ip], shell=True,
-                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        p = subprocess.Popen([f"./CIDRDetail.sh {cird_ip}"], shell=True,
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
 
@@ -32,8 +32,9 @@ def run_cird_sh(cird_ip):
         print(p.stderr.read().decode('utf-8'))
     return p
 
-def run_summary_sh(comms):
-    return subprocess.run(comms, stdout=subprocess.PIPE).stdout.decode('utf-8')
+def run_summary_sh(cird_ip):
+    with cd(cird_script_folder):
+        return subprocess.run([f"./summarize-results.sh {cird_ip.replace('/', '-')}"], shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE).stdout.decode('utf-8')
 
 def check_cird_detail_sh_running(cird_ip):
     '''
@@ -44,7 +45,7 @@ def check_cird_detail_sh_running(cird_ip):
         try:
 
             # Check if process name contains the given name string.
-            if cird_ip.lower() in proc.cmdline():
+            if "CIDRDetail.sh".lower() in proc.cmdline().lower() and cird_ip.lower() in proc.cmdline().lower():
                 return True
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
