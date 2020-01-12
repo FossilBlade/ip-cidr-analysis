@@ -22,12 +22,12 @@ def run_cird_sh(cird_ip):
         p = subprocess.Popen([f"./CIDRDetail.sh {cird_ip}"], shell=True,
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    if p.stdout:
-        print('here')
-        print(p.stdout.read().decode('utf-8'))
-    if p.stderr:
-        print('there')
-        print(p.stderr.read().decode('utf-8'))
+    # if p.stdout:
+    #     print('here')
+    #     print(p.stdout.read().decode('utf-8'))
+    # if p.stderr:
+    #     print('there')
+    #     print(p.stderr.read().decode('utf-8'))
     return p
 
 
