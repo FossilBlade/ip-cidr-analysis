@@ -6,7 +6,7 @@ import ipaddress
 
 from shell_utils import *
 
-
+from flask_cors import CORS
 class User(object):
     def __init__(self, id, username, password):
         self.id = id
@@ -18,7 +18,7 @@ class User(object):
 
 
 users = [
-    User(1, 'user1', 'abcxyz'),
+    User(1, 'test', 'test'),
     User(2, 'user2', 'abcxyz'),
 ]
 
@@ -44,10 +44,13 @@ app.config['SECRET_KEY'] = 'super-secret'
 FlaskJSON(app)
 
 jwt = JWT(app, authenticate, identity)
+app.config['CORS_ENABLED'] = True
+CORS(app, origins="*", allow_headers=[
+    "Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
+    supports_credentials=True)
 
-
-@app.route('/job', methods=['POST'])
-# @jwt_required()
+@app.route('/job')
+@jwt_required()
 @as_json
 def post_job():
     req = request.get_json(force=True)
@@ -77,16 +80,24 @@ def post_job():
 
 
 @app.route('/report')
-# @jwt_required()
+@jwt_required()
 def get_report():
     ip_cidr = request.args.get('ip_cidr')
-    if check_file_exists_for_cird(ip_cidr):
+    type = int(request.args.get('type'))
+
+    file_exists = check_file_exists_for_cird(ip_cidr)
+
+    if type==0 and file_exists:
+        json_response(result="available")
+
+
+    if file_exists:
         return send_file(get_ip_cidr_file_path(ip_cidr),
                          mimetype='text/plain',
                          attachment_filename=f'{ip_cidr.replace("/", "-")}_detail_report.txt',
                          as_attachment=True)
     else:
-        return json_response(result="invalid input")
+        return json_response(result="invalid input",status_=402)
 
 if __name__ == '__main__':
     app.run()

@@ -1,0 +1,47 @@
+<div class="slot">
+  <div class="space space-component2 background-transparent">
+    <div class="space space-component col-md-3 background-transparent">
+     
+    </div>
+    <div class="space space-component col-md-5 background-transparent">
+      <nb-card class="left" accent="primary">
+        <nb-alert  *ngIf="error" outline="danger">
+          {{error}}
+        </nb-alert> 
+        <nb-card-header class="slot">
+          <div class="space space-component2 background-transparent">
+            <div class="space space-component1 col-md-12 background-transparent">
+              <img class="image" src="/assets/images/Admin1.PNG">
+            </div>
+            <div class="space space-component1 col-md-12 background-transparent">
+              <h5 class="text-basic">Login</h5>
+            </div>
+          </div>
+        </nb-card-header>
+      
+        <nb-card-body class="slot">
+          <div class="space space-component col-md-12 background-transparent">
+            <label class="text text-basic label">Email</label>
+            <input nbInput [(ngModel)]="username" [readonly]="loading" class="input" placeholder="" fieldSize="medium" type="text" shape="rectangle" fullWidth>          
+            
+            <label class="text text-basic label">Password</label>
+            <input nbInput [(ngModel)]="password" [readonly]="loading" class="input" placeholder="" fieldSize="medium" type="password" shape="rectangle" fullWidth>
+          </div>
+        </nb-card-body>
+      
+        <nb-card-footer class="slot">
+          <div class="space space-component3 col-md-12 background-transparent">
+            <button nbButton [disabled]="!(username && password  && !loading)" (click)="onSubmit()" size="medium" appearance="filled" status="success" [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="xsmall" nbSpinnerMessage="" fullWidth>
+                Login
+            </button>
+          </div>    
+          
+          
+        </nb-card-footer>
+      </nb-card>
+    </div>
+    <div class="space space-component col-md-4 background-transparent">
+      
+    </div>
+  </div>
+</div>

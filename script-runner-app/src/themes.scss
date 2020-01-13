@@ -1,0 +1,90 @@
+@import '~@nebular/theme/styles/theming';
+@import '~@nebular/theme/styles/themes/default';
+
+$nb-themes: nb-register-theme((
+
+  border-radius: 0.25rem,
+  bg-default-color: color-basic-100,
+  bg-disabled-color: color-basic-400,
+  card-disabled-header-border-color: color-basic-500,
+  card-disabled-footer-border-color: color-basic-500,
+  table-disabled-border-color: color-basic-500,
+  bg-hint-color: color-basic-200,
+  card-hint-header-border-color: color-basic-300,
+  card-hint-footer-border-color: color-basic-300,
+  table-hint-border-color: color-basic-400,
+  table-border-color: color-basic-500,
+  shadow: 0 0.5rem 1rem 0 rgba(44, 51, 73, 0.1),
+
+  color-basic-100: #FFFFFF,
+  color-basic-200: #F7F9FC,
+  color-basic-300: #EDF1F7,
+  color-basic-400: #E4E9F2,
+  color-basic-500: #C5CEE0,
+  color-basic-600: #8F9BB3,
+  color-basic-700: #2E3A59,
+  color-basic-800: #222B45,
+  color-basic-900: #1A2138,
+  color-basic-1000: #151A30,
+  color-basic-1100: #101426,
+
+  color-primary-100: #D6E5FE,
+  color-primary-200: #ADCAFD,
+  color-primary-300: #84AAFA,
+  color-primary-400: #648FF5,
+  color-primary-500: #3366EF,
+  color-primary-600: #254ECD,
+  color-primary-700: #1939AC,
+  color-primary-800: #10278A,
+  color-primary-900: #091A72,
+
+  color-info-100: #D9F9FF,
+  color-info-200: #B3EFFF,
+  color-info-300: #8DE0FF,
+  color-info-400: #71D0FF,
+  color-info-500: #42B6FF,
+  color-info-600: #308EDB,
+  color-info-700: #216BB7,
+  color-info-800: #154C93,
+  color-info-900: #0C357A,
+
+  color-success-100: #F1FCD1,
+  color-success-200: #DFFAA5,
+  color-success-300: #C5F176,
+  color-success-400: #A9E452,
+  color-success-500: #82D31F,
+  color-success-600: #66B516,
+  color-success-700: #4E970F,
+  color-success-800: #387A09,
+  color-success-900: #296505,
+
+  color-warning-100: #FFFACD,
+  color-warning-200: #FFF49B,
+  color-warning-300: #FFEC69,
+  color-warning-400: #FFE543,
+  color-warning-500: #FFD905,
+  color-warning-600: #DBB703,
+  color-warning-700: #B79602,
+  color-warning-800: #937601,
+  color-warning-900: #7A6000,
+
+  color-danger-100: #FFEDD3,
+  color-danger-200: #FFD6A8,
+  color-danger-300: #FFBA7C,
+  color-danger-400: #FF9F5C,
+  color-danger-500: #FF7226,
+  color-danger-600: #DB521B,
+  color-danger-700: #B73813,
+  color-danger-800: #93220C,
+  color-danger-900: #7A1207,
+
+  
+  header-height: 5rem,
+  header-padding: 1rem,
+  
+  card-margin-bottom: 0,
+  
+  outline-width: 0,
+  
+), light, default);
+

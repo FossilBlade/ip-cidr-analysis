@@ -1,0 +1,45 @@
+<div class="slot">
+  <div class="space space-component7 background-transparent">
+    <div class="space space-component4 background-transparent">
+      <nb-card class="card" accent="primary">
+        <nb-card-header class="slot">
+          <div class="space space-component background-transparent">
+            <input nbInput [ngModel]="ip_cidr" (ngModel)="onKey($event)" placeholder="192.168.0.1/24" fieldSize="medium" type="text" shape="rectangle" fullWidth>
+          </div>
+        </nb-card-header>
+      
+        <nb-card-body class="slot">
+          <div class="space space-component3 background-transparent">
+            <div class="space space-component1 background-transparent">
+              <button nbButton [disabled]="!valid_ip_cidr" (click)="onClick()" size="medium" appearance="filled" status="primary">
+                  Detail Report
+              </button>
+            </div>
+            <div class="space space-component2 col-md-6 background-transparent">
+              <button nbButton [disabled]="!valid_ip_cidr" (click)="onClick()" size="medium" appearance="filled" status="primary">
+                  Summary Report
+              </button>
+            </div>
+          </div>
+        </nb-card-body>
+      
+        <nb-card-footer  *ngIf="btn_pressed" class="slot">
+          <div class="space space-component3 background-transparent">
+            <a nbButton *ngIf="file_present" href="" target="_blank"  size="medium" appearance="filled" status="primary">
+                Download report
+            </a>
+            <nb-alert  *ngIf="!valid_ip_cidr" outline="danger">
+              {{error}}
+            </nb-alert> 
+          </div>
+        </nb-card-footer>
+      </nb-card>
+    </div>
+    <div class="space space-component5 background-transparent">
+      
+    </div>
+    <div class="space space-component6 background-transparent">
+      
+    </div>
+  </div>
+</div>

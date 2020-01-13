@@ -1,0 +1,12 @@
+<nb-layout withScroll>
+  <nb-layout-header *ngIf="(layout$ | async)?.header" [fixed]="(layout$ | async)?.headerFixed">
+    <app-sidebar-toggle *ngIf="(layout$ | async)?.sidebar"></app-sidebar-toggle>
+    <app-header></app-header>
+  </nb-layout-header>
+  <nb-sidebar *ngIf="(layout$ | async)?.sidebar" [fixed]="(layout$ | async)?.sidebarFixed">
+    <app-sidebar></app-sidebar>
+  </nb-sidebar>
+  <nb-layout-column [style.padding]="padding$ | async">
+    <router-outlet></router-outlet>
+  </nb-layout-column>
+</nb-layout>

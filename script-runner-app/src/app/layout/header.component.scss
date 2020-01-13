@@ -1,0 +1,25 @@
+
+.image {
+  width: 48px;
+  height: 48px;
+  border-radius: 0;
+  object-fit: fill;
+}
+
+.space-component {
+  height: auto;
+  min-height: 2rem;
+  align-items: center;
+  align-content: center;
+  justify-content: flex-start;
+  overflow: visible;
+}
+
+.space-component1 {
+  height: 100%;
+  flex-grow: 1;
+  align-items: stretch;
+  align-content: stretch;
+  justify-content: flex-start;
+  overflow: visible;
+}
