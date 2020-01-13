@@ -1,5 +1,6 @@
 ﻿import { Injectable } from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpParams,HttpResponse} from "@angular/common/http";
+
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { environment } from "../../environments/environment";
@@ -38,4 +39,36 @@ export class ApiService {
         })
       );
   }
-}
+
+
+  run_job(ipcidr: string) {
+    let params = new HttpParams().set("ipcidr", ipcidr);
+
+    return this.http
+      .get<any>(`${environment.apiUrl}/job`, { params: params })
+      .pipe(
+        timeout(5000),
+        retry(0),
+        catchError((e, c) => {
+          return _throw(e);
+        }),
+        switchMap(resp => {
+          console.log("Response Recieved: " + JSON.stringify(resp));
+
+          return of(resp);
+        }),
+        finalize(() => {
+          console.log("finilize");
+        })
+      );
+  }
+
+
+
+  downloadFile(ipcidr:string):any{
+    let params = new HttpParams().set("ipcidr", ipcidr);
+
+		return this.http.get(`${environment.apiUrl}/report`, { params: params , responseType: 'arraybuffer'});
+   
+
+}}

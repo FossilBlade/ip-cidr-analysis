@@ -3,10 +3,13 @@ from flask_jwt import JWT, jwt_required, current_identity
 from flask_json import FlaskJSON, as_json, JsonError, json_response
 from werkzeug.security import safe_str_cmp
 import ipaddress
+import logging
 
 from shell_utils import *
 
 from flask_cors import CORS
+
+
 class User(object):
     def __init__(self, id, username, password):
         self.id = id
@@ -16,6 +19,8 @@ class User(object):
     def __str__(self):
         return "User(id='%s')" % self.id
 
+
+log = logging.getLogger(__name__)
 
 users = [
     User(1, 'test', 'test'),
@@ -47,49 +52,51 @@ jwt = JWT(app, authenticate, identity)
 app.config['CORS_ENABLED'] = True
 CORS(app, origins="*", allow_headers=[
     "Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
-    supports_credentials=True)
+     supports_credentials=True)
+
 
 @app.route('/job')
 @jwt_required()
 @as_json
-def post_job():
-    req = request.get_json(force=True)
-    print(req)
+def run_job():
+
+    print(request.args)
     try:
-        cird_ip = req.get('ipcidr')
+        cird_ip = request.args['ipcidr']
 
         if not cird_ip:
-            raise JsonError(description='invalid input', status_=400)
+            raise JsonError(error='Empty IP provided in request.', status_=400)
+
+        print(cird_ip)
     except (KeyError, TypeError, ValueError):
-        raise JsonError(description='invalid request type', status_=400)
+        raise JsonError(error='IP Not present in request', status_=400)
 
     try:
-        ipaddress.ip_network(cird_ip)
-    except ValueError:
-        raise JsonError(description='not a valid input value', status_=400)
+        ipaddress.ip_network(cird_ip,False)
+    except ValueError as e:
+        print(e)
+        raise JsonError(error='IP not Valid', status_=400)
 
     if check_cird_detail_sh_running(cird_ip):
-        raise JsonError(description='process is running', status_=420)
+        raise JsonError(error='Process is already running for the given IP', status_=400)
 
     if check_detail_file_exists_for_cird(cird_ip):
         return dict(result=run_summary_sh(cird_ip))
+    try:
+        run_cird_sh(cird_ip)
+    except:
+        log.exception('Error Running Job for IP: '+cird_ip)
+        raise JsonError(error='Error running the job for IP. Please check with admin.', status_=500)
 
-    run_cird_sh(cird_ip)
-
-    return dict(result='process started')
+    return dict(result='Process initiated for IP. Check back later for the reports.')
 
 
 @app.route('/report')
 @jwt_required()
 def get_report():
     ip_cidr = request.args.get('ipcidr')
-    type = int(request.args.get('type'))
 
     file_exists = check_detail_file_exists_for_cird(ip_cidr)
-
-    if type==0 and file_exists:
-        json_response(result="available")
-
 
     if file_exists:
         return send_file(get_ip_cidr_file_path(ip_cidr),
@@ -97,7 +104,8 @@ def get_report():
                          attachment_filename=f'{ip_cidr.replace("/", "-")}_detail_report.txt',
                          as_attachment=True)
     else:
-        return json_response(result="invalid input",status_=402)
+        raise JsonError(error="Detail report not present for given IP", status_=400)
+
 
 @app.route('/check')
 @jwt_required()
@@ -115,10 +123,9 @@ def check_ip():
     #         job_running=check_cird_detail_sh_running(ip_cidr),
     #         summary=summary)
 
-    return dict(ipcidr=ip_cidr,detail_file_exits=False,
+    return dict(detail_file_exits=True, status_=200,
                 job_running=False,
                 summary="hellowsFSFSDFADSFDSFDSFDSFSDFDSAFDSFSDFSDFDSFSDFSDAFDSFSDAF\nASDFADSFADSFSDAFSDFSDAFSDAFDSAFSDAFDSAFDSAFASDF\nasdfdsfdsfdsfdsfsdfdsfdsfdsafadsfdasfdasdaf\nasfdssdfadsfsda\nnasfdasfasdfdsafsdafsdafasdfasd\nasdfadsfasdfsadfasdfsdafadsfasdfasdf\nasdfadsdsafadsfasdfasdfasdfadsdsaf\nafdasdfasdfasdfADFDASFSDFworld".splitlines())
-
 
 
 if __name__ == '__main__':

@@ -11,13 +11,26 @@ export class ErrorInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
+
+
+            console.error('HTTP Error Interceptor: '+JSON.stringify(err))
+
+
             if (err.status === 401) {
                 // auto logout if 401 response returned from api
                 this.authenticationService.logout();
                 location.reload(true);
             }
 
-            const error = err.error.message || err.statusText;
+            let error = err.error.error || err.statusText;
+
+            if (err.status === 0) {
+                error = "Ahh Snap... Network issue detected. Please try back later.";
+            }
+
+
+
+
             return throwError(error);
         }))
     }

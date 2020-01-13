@@ -5,12 +5,12 @@
         <nb-card-header class="slot">
           <div class="space space-component background-transparent">
             <input nbInput (keyup)="onIpInputChange($event)" [readonly]="input_readonly" placeholder="192.168.0.1/24"
-              fieldSize="medium" type="text" shape="rectangle" fullWidth>
+              value="192.168.0.1/24" fieldSize="medium" type="text" shape="rectangle" fullWidth>
           </div>
         </nb-card-header>
 
-        <!-- <nb-card-body class="slot">
-          <div class="space space-component3 background-transparent">
+        <nb-card-body class="slot">
+          <!-- <div class="space space-component3 background-transparent">
             <div class="space space-component1 background-transparent">
               <button nbButton [disabled]="!valid_ip_cidr" (click)="onClick()" size="medium" appearance="filled"
                 status="primary">
@@ -23,19 +23,19 @@
                 Summary Report
               </button>
             </div>
-          </div> 
+          </div>  -->
 
-           Input IP In CIRD Notation And Hit Enter
-        </nb-card-body> -->
+           Put the IP and hit enter.<br /><br />Tool will validate the IP provided and perform various checks.<br /><br />Based on the result of the checks will provide options to Run/Download/View Summary
+        </nb-card-body>
 
-        <nb-card-footer *ngIf="btn_pressed" class="slot">
+        <!-- <nb-card-footer *ngIf="btn_pressed" class="slot">
           <div class="space space-component3 background-transparent">
-            <a nbButton *ngIf="file_present" href="" target="_blank" size="medium" appearance="filled" status="primary">
+            <button nbButton *ngIf="file_present" (click)="download()" size="medium" appearance="filled" status="primary">
               Download report
-            </a>
+            </button>
 
           </div>
-        </nb-card-footer>
+        </nb-card-footer> -->
       </nb-card>
     </div>
     <div class="space space-component5 background-transparent">
@@ -46,25 +46,46 @@
         {{errormsg}}
       </nb-alert>
 
-      <nb-card *ngIf="data && !iserror" class="card" accent="primary">
+      <nb-card *ngIf="checkresult && !iserror" class="card" accent="primary">
         <nb-card-header class="slot">
           <div class="space space-component3 background-transparent">
-            <a nbButton *ngIf="data.detail_file_exits" href="" target="_blank" size="medium" appearance="filled"
-              status="primary">
+
+            <button nbButton *ngIf="checkresult && checkresult.detail_file_exits" (click)="download()" size="medium" appearance="filled" status="primary" [nbSpinner]="input_readonly" nbSpinnerStatus="info" nbSpinnerSize="xsmall"
+            nbSpinnerMessage="">
               Download report
-            </a>
-            <a nbButton *ngIf="!data.detail_file_exits" href="" target="_blank" size="medium" appearance="filled"
-              status="primary">
-              Start Detail Report Job
-            </a>
+            </button>  
+            <div class="space space-component2 col-md-6 background-transparent">
+            <nb-alert *ngIf="download_error" outline="danger">
+              {{download_error}}
+            </nb-alert>
+          </div>
+            <button nbButton *ngIf="checkresult && !checkresult.detail_file_exits && !checkresult.job_running" [disabled]="input_readonly" (click)="runJob()" size="medium" appearance="filled"
+              status="success" [nbSpinner]="input_readonly" nbSpinnerStatus="info" nbSpinnerSize="xsmall"
+              nbSpinnerMessage="">
+              Run Detail Report Job
+            </button>            
           </div>
         </nb-card-header>
 
-        <nb-card-body *ngIf="data.summary && data.detail_file_exits" class="slot">
-          <div  *ngFor="let line of data.summary" class="space space-component3 background-transparent">
-           
-              {{line}}
-            
+
+
+        <nb-card-body *ngIf="job_run_result" class="slot">
+          <nb-alert *ngIf="job_run_result && job_run_result.error" outline="danger">
+            {{job_run_result.error}}
+          </nb-alert>
+          <nb-alert *ngIf="job_run_result && job_run_result.result" outline="success">
+            {{job_run_result.result}}
+          </nb-alert>
+        </nb-card-body>
+
+
+       
+
+        <nb-card-body *ngIf="checkresult && checkresult.summary && checkresult.detail_file_exits" class="slot">
+          <div *ngFor="let line of checkresult.summary" class="space space-component3 background-transparent">
+
+            {{line}}
+
           </div>
         </nb-card-body>
 

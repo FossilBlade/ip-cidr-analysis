@@ -1,1 +1,1 @@
-cird_script_folder='/home/ubuntu/bin/NetDetails'
+cird_script_folder=r'C:\Users\rs1614\work'

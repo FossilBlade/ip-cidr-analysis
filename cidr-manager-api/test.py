@@ -1,4 +1,10 @@
-import subprocess
+import ipaddress
 
-cird_ip ='1.3.4.5/34'
-print(cird_ip.replace('/', '-'))
+
+cird_ip = '192.0.0.1/24'
+
+try:
+    p = ipaddress.ip_network(cird_ip,False)
+    print(list(p.hosts()))
+except ValueError as e:
+    print(e)
