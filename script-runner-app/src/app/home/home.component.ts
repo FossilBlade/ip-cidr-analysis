@@ -8,8 +8,15 @@ import {
 import * as IPCIDR from "ip-cidr";
 import { ApiService } from "../_services/api.service";
 
-import * as fileSaver from "file-saver";
+import { switchMap } from "rxjs/operators/switchMap";
 
+import {
+  HttpClient,
+  HttpParams,
+  HttpResponse,
+  HttpEventType
+} from "@angular/common/http";
+import { saveAs as importedSaveAs } from "file-saver";
 @Component({
   selector: "app-home",
   templateUrl: "./home.component.html",
@@ -23,20 +30,29 @@ export class HomeComponent implements OnInit {
   input_readonly: boolean = false;
   ip_cird: string = "";
   job_run_result: any;
-  download_error:string;
+  download_error: string;
+  downloading: boolean;
+  downloaded: boolean;
+  download_prog: number = 0;
 
   constructor(private apiService: ApiService, private ref: ChangeDetectorRef) {}
 
   ngOnInit() {}
 
   onIpInputChange(event) {
+
+   
+
     this.iserror = false;
     this.errormsg = "";
     this.checkresult = null;
     this.input_readonly = false;
     this.ip_cird = "";
     this.job_run_result = null;
-    this.download_error=null;
+    this.download_error = null;
+    this.downloading = false;
+    this.downloaded = false;
+    this.download_prog = 0;
 
     let temp_ip = event.target.value;
     if (!temp_ip) {
@@ -59,7 +75,7 @@ export class HomeComponent implements OnInit {
             this.ref.detectChanges();
           },
           err => {
-            console.log(typeof err);
+            console.log(typeof err);          
 
             this.show_error("Error: " + err);
             this.ref.detectChanges();
@@ -116,41 +132,59 @@ export class HomeComponent implements OnInit {
     }
   }
 
-
-
-
   downLoadFile(data: any, type: string) {
     this.input_readonly = true;
     this.ref.detectChanges();
 
-    let blob = new Blob([data], { type: type});
+    let blob = new Blob([data], { type: type });
     let url = window.URL.createObjectURL(blob);
     let pwa = window.open(url);
-    if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
-        alert( 'Please disable your Pop-up blocker and try again.');
+
+    if (!pwa || pwa.closed || typeof pwa.closed == "undefined") {
+      alert("Please disable your Pop-up blocker and try again.");
     }
 
     this.input_readonly = false;
-        this.ref.detectChanges();
-}
-
-
-
+    this.ref.detectChanges();
+  }
 
   download() {
-    this.input_readonly = true;
+    this.downloaded = false;
     this.ref.detectChanges();
 
-    this.apiService.downloadFile(this.ip_cird).subscribe(
-      response => this.downLoadFile(response, "text/plain"),
-      error => {
-        console.log("Error downloading the file: "+ error);
-        this.download_error = error;
-        this.input_readonly = false;
-        this.ref.detectChanges();
-      }
-      
-    );
-    
+    this.apiService
+      .downloadFile(this.ip_cird, this.download_prog, this.ref)
+      .subscribe(
+        result => {
+         
+
+          if (result.type === HttpEventType.DownloadProgress) {
+            this.downloading = true;
+
+            const percentDone = Math.round(
+              (100 * result.loaded) / result.total
+            );
+            this.download_prog = percentDone;
+            console.log(this.download_prog);
+          }
+          if (result.type === HttpEventType.Response) {
+            importedSaveAs(
+              result.body,
+              this.ip_cird.replace("/", "-") + "_report.txt"
+            );
+            this.downloading = false;
+            this.downloaded = true;
+          }
+
+          this.ref.detectChanges();
+        },
+        err => {
+          this.download_prog = null;
+          this.download_error = err;
+          this.downloading = false;
+          this.downloaded = true;
+          this.ref.detectChanges();
+        }
+      );
   }
 }

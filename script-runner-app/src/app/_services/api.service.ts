@@ -1,7 +1,12 @@
 ﻿import { Injectable } from "@angular/core";
-import { HttpClient, HttpParams,HttpResponse} from "@angular/common/http";
-
-import { BehaviorSubject, Observable } from "rxjs";
+import {
+  HttpClient,
+  HttpParams,
+  HttpResponse,
+  HttpEventType
+} from "@angular/common/http";
+import { ResponseContentType } from "@angular/http";
+import { saveAs as importedSaveAs } from "file-saver";
 
 import { environment } from "../../environments/environment";
 import { CheckResult } from "../_models/check-result";
@@ -40,7 +45,6 @@ export class ApiService {
       );
   }
 
-
   run_job(ipcidr: string) {
     let params = new HttpParams().set("ipcidr", ipcidr);
 
@@ -63,12 +67,14 @@ export class ApiService {
       );
   }
 
-
-
-  downloadFile(ipcidr:string):any{
+  downloadFile(ipcidr: string, progressbar: number, changePusher): any {
     let params = new HttpParams().set("ipcidr", ipcidr);
 
-		return this.http.get(`${environment.apiUrl}/report`, { params: params , responseType: 'arraybuffer'});
-   
-
-}}
+    return this.http.get(`${environment.apiUrl}/report`, {
+      params: params,
+      responseType: "blob",
+      reportProgress: true,
+      observe: "events"
+    });
+  }
+}

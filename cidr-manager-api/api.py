@@ -91,20 +91,24 @@ def run_job():
     return dict(result='Process initiated for IP. Check back later for the reports.')
 
 
-@app.route('/report')
+@app.route('/report', methods=['HEAD'])
+def head_report():
+    return {}
+
+@app.route('/report', methods=['GET'])
 @jwt_required()
 def get_report():
     ip_cidr = request.args.get('ipcidr')
 
     file_exists = check_detail_file_exists_for_cird(ip_cidr)
-
+   
     if file_exists:
         return send_file(get_ip_cidr_file_path(ip_cidr),
                          mimetype='text/plain',
-                         attachment_filename=f'{ip_cidr.replace("/", "-")}_detail_report.txt',
+                         attachment_filename=f'{ip_cidr.replace("/", "-")}_report.txt',
                          as_attachment=True)
     else:
-        raise JsonError(error="Detail report not present for given IP", status_=400)
+        raise JsonError(error="Detail report not present for given IP", status_=404)
 
 
 @app.route('/check')
@@ -119,13 +123,13 @@ def check_ip():
     if not job_running and file_exists:
         summary = run_summary_sh(ip_cidr)
 
-    # return dict(ipcidr=ip_cidr,detail_file_exits=check_detail_file_exists_for_cird(ip_cidr),
-    #         job_running=check_cird_detail_sh_running(ip_cidr),
-    #         summary=summary)
+    return dict(ipcidr=ip_cidr,detail_file_exits=check_detail_file_exists_for_cird(ip_cidr),
+            job_running=check_cird_detail_sh_running(ip_cidr),
+            summary=summary)
 
-    return dict(detail_file_exits=True, status_=200,
-                job_running=False,
-                summary="hellowsFSFSDFADSFDSFDSFDSFSDFDSAFDSFSDFSDFDSFSDFSDAFDSFSDAF\nASDFADSFADSFSDAFSDFSDAFSDAFDSAFSDAFDSAFDSAFASDF\nasdfdsfdsfdsfdsfsdfdsfdsfdsafadsfdasfdasdaf\nasfdssdfadsfsda\nnasfdasfasdfdsafsdafsdafasdfasd\nasdfadsfasdfsadfasdfsdafadsfasdfasdf\nasdfadsdsafadsfasdfasdfasdfadsdsaf\nafdasdfasdfasdfADFDASFSDFworld".splitlines())
+    # return dict(detail_file_exits=True, status_=200,
+    #             job_running=False,
+    #             summary="hellowsFSFSDFADSFDSFDSFDSFSDFDSAFDSFSDFSDFDSFSDFSDAFDSFSDAF\nASDFADSFADSFSDAFSDFSDAFSDAFDSAFSDAFDSAFDSAFASDF\nasdfdsfdsfdsfdsfsdfdsfdsfdsafadsfdasfdasdaf\nasfdssdfadsfsda\nnasfdasfasdfdsafsdafsdafasdfasd\nasdfadsfasdfsadfasdfsdafadsfasdfasdf\nasdfadsdsafadsfasdfasdfasdfadsdsaf\nafdasdfasdfasdfADFDASFSDFworld".splitlines())
 
 
 if __name__ == '__main__':
