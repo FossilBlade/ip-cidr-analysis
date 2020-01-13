@@ -1,45 +1,79 @@
 <div class="slot">
   <div class="space space-component7 background-transparent">
     <div class="space space-component4 background-transparent">
-      <nb-card class="card" accent="primary">
+      <nb-card [nbSpinner]="input_readonly" nbSpinnerStatus="primary" class="card" accent="primary">
         <nb-card-header class="slot">
           <div class="space space-component background-transparent">
-            <input nbInput [ngModel]="ip_cidr" (ngModel)="onKey($event)" placeholder="192.168.0.1/24" fieldSize="medium" type="text" shape="rectangle" fullWidth>
+            <input nbInput (keyup)="onIpInputChange($event)" [readonly]="input_readonly" placeholder="192.168.0.1/24"
+              fieldSize="medium" type="text" shape="rectangle" fullWidth>
           </div>
         </nb-card-header>
-      
-        <nb-card-body class="slot">
+
+        <!-- <nb-card-body class="slot">
           <div class="space space-component3 background-transparent">
             <div class="space space-component1 background-transparent">
-              <button nbButton [disabled]="!valid_ip_cidr" (click)="onClick()" size="medium" appearance="filled" status="primary">
-                  Detail Report
+              <button nbButton [disabled]="!valid_ip_cidr" (click)="onClick()" size="medium" appearance="filled"
+                status="primary">
+                Detail Report
               </button>
             </div>
             <div class="space space-component2 col-md-6 background-transparent">
-              <button nbButton [disabled]="!valid_ip_cidr" (click)="onClick()" size="medium" appearance="filled" status="primary">
-                  Summary Report
+              <button nbButton [disabled]="!valid_ip_cidr" (click)="onClick()" size="medium" appearance="filled"
+                status="primary">
+                Summary Report
               </button>
             </div>
-          </div>
-        </nb-card-body>
-      
-        <nb-card-footer  *ngIf="btn_pressed" class="slot">
+          </div> 
+
+           Input IP In CIRD Notation And Hit Enter
+        </nb-card-body> -->
+
+        <nb-card-footer *ngIf="btn_pressed" class="slot">
           <div class="space space-component3 background-transparent">
-            <a nbButton *ngIf="file_present" href="" target="_blank"  size="medium" appearance="filled" status="primary">
-                Download report
+            <a nbButton *ngIf="file_present" href="" target="_blank" size="medium" appearance="filled" status="primary">
+              Download report
             </a>
-            <nb-alert  *ngIf="!valid_ip_cidr" outline="danger">
-              {{error}}
-            </nb-alert> 
+
           </div>
         </nb-card-footer>
       </nb-card>
     </div>
     <div class="space space-component5 background-transparent">
-      
+
     </div>
     <div class="space space-component6 background-transparent">
-      
+      <nb-alert *ngIf="iserror" outline="danger">
+        {{errormsg}}
+      </nb-alert>
+
+      <nb-card *ngIf="data && !iserror" class="card" accent="primary">
+        <nb-card-header class="slot">
+          <div class="space space-component3 background-transparent">
+            <a nbButton *ngIf="data.detail_file_exits" href="" target="_blank" size="medium" appearance="filled"
+              status="primary">
+              Download report
+            </a>
+            <a nbButton *ngIf="!data.detail_file_exits" href="" target="_blank" size="medium" appearance="filled"
+              status="primary">
+              Start Detail Report Job
+            </a>
+          </div>
+        </nb-card-header>
+
+        <nb-card-body *ngIf="data.summary && data.detail_file_exits" class="slot">
+          <div  *ngFor="let line of data.summary" class="space space-component3 background-transparent">
+           
+              {{line}}
+            
+          </div>
+        </nb-card-body>
+
+
+      </nb-card>
+
+
+
+
     </div>
   </div>
 </div>

@@ -56,7 +56,7 @@ def post_job():
     req = request.get_json(force=True)
     print(req)
     try:
-        cird_ip = req.get('ip_cidr')
+        cird_ip = req.get('ipcidr')
 
         if not cird_ip:
             raise JsonError(description='invalid input', status_=400)
@@ -71,7 +71,7 @@ def post_job():
     if check_cird_detail_sh_running(cird_ip):
         raise JsonError(description='process is running', status_=420)
 
-    if check_file_exists_for_cird(cird_ip):
+    if check_detail_file_exists_for_cird(cird_ip):
         return dict(result=run_summary_sh(cird_ip))
 
     run_cird_sh(cird_ip)
@@ -82,10 +82,10 @@ def post_job():
 @app.route('/report')
 @jwt_required()
 def get_report():
-    ip_cidr = request.args.get('ip_cidr')
+    ip_cidr = request.args.get('ipcidr')
     type = int(request.args.get('type'))
 
-    file_exists = check_file_exists_for_cird(ip_cidr)
+    file_exists = check_detail_file_exists_for_cird(ip_cidr)
 
     if type==0 and file_exists:
         json_response(result="available")
@@ -98,6 +98,28 @@ def get_report():
                          as_attachment=True)
     else:
         return json_response(result="invalid input",status_=402)
+
+@app.route('/check')
+@jwt_required()
+@as_json
+def check_ip():
+    ip_cidr = request.args.get('ipcidr')
+
+    job_running = check_cird_detail_sh_running(ip_cidr)
+    file_exists = check_detail_file_exists_for_cird(ip_cidr)
+    summary = None
+    if not job_running and file_exists:
+        summary = run_summary_sh(ip_cidr)
+
+    # return dict(ipcidr=ip_cidr,detail_file_exits=check_detail_file_exists_for_cird(ip_cidr),
+    #         job_running=check_cird_detail_sh_running(ip_cidr),
+    #         summary=summary)
+
+    return dict(ipcidr=ip_cidr,detail_file_exits=False,
+                job_running=False,
+                summary="hellowsFSFSDFADSFDSFDSFDSFSDFDSAFDSFSDFSDFDSFSDFSDAFDSFSDAF\nASDFADSFADSFSDAFSDFSDAFSDAFDSAFSDAFDSAFDSAFASDF\nasdfdsfdsfdsfdsfsdfdsfdsfdsafadsfdasfdasdaf\nasfdssdfadsfsda\nnasfdasfasdfdsafsdafsdafasdfasd\nasdfadsfasdfsadfasdfsdafadsfasdfasdf\nasdfadsdsafadsfasdfasdfasdfadsdsaf\nafdasdfasdfasdfADFDASFSDFworld".splitlines())
+
+
 
 if __name__ == '__main__':
     app.run()

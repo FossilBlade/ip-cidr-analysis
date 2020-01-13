@@ -50,6 +50,6 @@ def check_cird_detail_sh_running(cird_ip):
 def get_ip_cidr_file_path(cird_ip):
     return os.path.join(cird_script_folder, 'outputfile-' + cird_ip.replace('/', '-'))
 
-def check_file_exists_for_cird(cird_ip):
+def check_detail_file_exists_for_cird(cird_ip):
     return os.path.exists(get_ip_cidr_file_path(cird_ip))
 
