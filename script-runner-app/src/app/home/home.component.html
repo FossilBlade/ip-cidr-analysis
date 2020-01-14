@@ -45,15 +45,16 @@
               [nbSpinner]="input_readonly" nbSpinnerStatus="info" nbSpinnerSize="xsmall" nbSpinnerMessage="">
               Run Detail Report Job
             </button>
+            <nb-alert *ngIf="job_run_result && job_run_result.error" outline="danger">
+              {{job_run_result.error}}
+            </nb-alert>
+            <nb-alert *ngIf="job_run_result && job_run_result.result" outline="success">
+              {{job_run_result.result}}
+            </nb-alert>
           </div>
         </nb-card-header>
         <nb-card-body *ngIf="job_run_result" class="slot">
-          <nb-alert *ngIf="job_run_result && job_run_result.error" outline="danger">
-            {{job_run_result.error}}
-          </nb-alert>
-          <nb-alert *ngIf="job_run_result && job_run_result.result" outline="success">
-            {{job_run_result.result}}
-          </nb-alert>
+          
         </nb-card-body>
         <nb-card-body *ngIf="checkresult && checkresult.summary && checkresult.detail_file_exits" class="slot">
           <div *ngFor="let line of checkresult.summary" class="space space-component3 background-transparent">
