@@ -115,7 +115,7 @@ def check_ip():
 
     return dict(ipcidr=ip_cidr, detail_file_exits=check_detail_file_exists_for_cird(ip_cidr),
                 job_running=check_cird_detail_sh_running(ip_cidr),
-                summary=summary.splitlines())
+                summary=summary.splitlines() if summary else [])
 
     # return dict(detail_file_exits=True, status_=200,
     #             job_running=False,
