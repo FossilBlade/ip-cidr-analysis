@@ -28,7 +28,7 @@ def identity(payload):
     return userid_table.get(user_id, None)
 
 
-app = Flask(__name__,)
+app = Flask(__name__, )
 app.debug = True
 app.config["APPLICATION_ROOT"] = "/api"
 app.config['SECRET_KEY'] = '53453453535sdfsdfsafasdf8asdfsdafsadf56asdfadsfdsfasdf'
@@ -47,7 +47,6 @@ CORS(app, origins="*", allow_headers=[
 @jwt_required()
 @as_json
 def run_job():
-
     print(request.args)
     try:
         cird_ip = request.args['ipcidr']
@@ -60,7 +59,7 @@ def run_job():
         raise JsonError(error='IP Not present in request', status_=400)
 
     try:
-        ipaddress.ip_network(cird_ip,False)
+        ipaddress.ip_network(cird_ip, False)
     except ValueError as e:
         print(e)
         raise JsonError(error='IP not Valid', status_=400)
@@ -71,9 +70,11 @@ def run_job():
     if check_detail_file_exists_for_cird(cird_ip):
         return dict(result=run_summary_sh(cird_ip))
     try:
-        run_cird_sh(cird_ip)
+        docker_id = run_cird_sh(cird_ip)
+        print(docker_id)
+        log.info(f'Started docker for {cird_ip} - {docker_id}')
     except:
-        log.exception('Error Running Job for IP: '+cird_ip)
+        log.exception('Error Running Job for IP: ' + cird_ip)
         raise JsonError(error='Error running the job for IP. Please check with admin.', status_=500)
 
     return dict(result='Process initiated for IP. Check back later for the reports.')
@@ -82,6 +83,7 @@ def run_job():
 @app.route('/report', methods=['HEAD'])
 def head_report():
     return {}
+
 
 @app.route('/report', methods=['GET'])
 @jwt_required()
@@ -111,9 +113,9 @@ def check_ip():
     if not job_running and file_exists:
         summary = run_summary_sh(ip_cidr)
 
-    return dict(ipcidr=ip_cidr,detail_file_exits=check_detail_file_exists_for_cird(ip_cidr),
-            job_running=check_cird_detail_sh_running(ip_cidr),
-            summary=summary)
+    return dict(ipcidr=ip_cidr, detail_file_exits=check_detail_file_exists_for_cird(ip_cidr),
+                job_running=check_cird_detail_sh_running(ip_cidr),
+                summary=summary.splitlines() if summary else [])
 
     # return dict(detail_file_exits=True, status_=200,
     #             job_running=False,
