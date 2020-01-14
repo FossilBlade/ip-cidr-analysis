@@ -62,7 +62,7 @@ def run_summary_sh(cird_ip):
 
 def check_cird_detail_sh_running(cird_ip):
     sanitized_cird = cird_ip.replace('/', '-')
-    docker_name = subprocess.run([
+    docker_name = subprocess.call([
         f'docker ps -qf "name={sanitized_cird}"'],
         shell=True,
         stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout.decode('utf-8')
