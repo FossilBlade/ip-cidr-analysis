@@ -20,11 +20,13 @@ class cd:
 
 def run_cird_sh(cird_ip):
     sanitized_cird = cird_ip.replace('/', '-')
-    print(f'docker run -d --rm --network=host -v {cird_script_folder}:/root/bin/NetDetails:rw -w /root/bin/NetDetails --name {sanitized_cird} cidr_runner:latest ./CIDRDetail.sh {cird_ip}')
-    return subprocess.run([
-        f'docker run -d --rm --network=host -v {cird_script_folder}:/root/bin/NetDetails:rw -w /root/bin/NetDetails --name {sanitized_cird} cidr_runner:latest ./CIDRDetail.sh {cird_ip}'],
-        shell=True,
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cird_script_folder).stdout.decode('utf-8')
+    dok_cmd = f'docker run -d --rm --network=host -v {cird_script_folder}:/root/bin/NetDetails:rw -w /root/bin/NetDetails --name {sanitized_cird} cidr_runner:latest ./CIDRDetail.sh {cird_ip}'
+    # return subprocess.run([
+    #     f'docker run -d --rm --network=host -v {cird_script_folder}:/root/bin/NetDetails:rw -w /root/bin/NetDetails --name {sanitized_cird} cidr_runner:latest ./CIDRDetail.sh {cird_ip}'],
+    #     shell=True,
+    #     stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cird_script_folder).stdout.decode('utf-8')
+
+    return os.system(dok_cmd)
 
     # with cd(cird_script_folder):
     #     os.system(f"./CIDRDetail.sh {cird_ip} &")
