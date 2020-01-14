@@ -1,1 +1,1 @@
-cird_script_folder=r'C:\Users\rs1614\work'
+cird_script_folder=r'/home/raush/bin/NetDetails'
