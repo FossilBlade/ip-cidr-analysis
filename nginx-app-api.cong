@@ -1,0 +1,14 @@
+server {
+  listen 0.0.0.0:80;
+  root /var/www/html;
+
+location /api {
+  include proxy_params;
+        rewrite ^/api/(.*) /$1 break;
+  proxy_pass http://unix:/home/ubuntu/ip-cidr-analysis/cidr-manager-api/api.sock;
+}
+
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+}

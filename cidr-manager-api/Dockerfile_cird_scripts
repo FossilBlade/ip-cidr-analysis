@@ -1,0 +1,8 @@
+FROM alpine:3.11.2
+
+## docker build --network=host -t cidr_runner:latest -f Dockerfile_cird_scripts .
+
+RUN apk update && apk add -U bind-tools curl bash
+
+
+CMD bash
