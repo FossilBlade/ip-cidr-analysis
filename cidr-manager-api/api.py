@@ -72,6 +72,7 @@ def run_job():
         return dict(result=run_summary_sh(cird_ip))
     try:
         docker_id = run_cird_sh(cird_ip)
+        print(docker_id)
         log.info(f'Started docker for {cird_ip} - {docker_id}')
     except:
         log.exception('Error Running Job for IP: '+cird_ip)
