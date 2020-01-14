@@ -29,8 +29,8 @@ export class ApiService {
     return this.http
       .get<CheckResult>(`${environment.apiUrl}/check`, { params: params })
       .pipe(
-        timeout(5000),
-        retry(0),
+        // timeout(5000),
+        // retry(0),
         catchError((e, c) => {
           return _throw(e);
         }),
