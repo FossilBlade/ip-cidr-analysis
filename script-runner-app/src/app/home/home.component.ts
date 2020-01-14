@@ -82,11 +82,13 @@ export class HomeComponent implements OnInit {
       } else {
         console.error("INVALID IP: " + temp_ip);
         this.show_error("INVALID IP: " + temp_ip);
+        this.input_readonly = false;
+        this.ref.detectChanges();
       }
     }
 
     this.input_readonly = false;
-    this.ref.detectChanges();
+    // this.ref.detectChanges();
   }
 
   runJob() {

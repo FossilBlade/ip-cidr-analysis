@@ -18,6 +18,8 @@
   overflow: visible;
 }
 
+p { word-break: break-all }
+
 .space-component2 {
   height: auto;
   min-height: 2rem;
@@ -60,8 +62,9 @@
 }
 
 .space-component6 {
-  height: 568px;
-  flex-grow: 1;
+  height: 569px;
+  width: 1000px;
+  // flex-grow: 1;
   align-items: flex-start;
   align-content: flex-start;
   justify-content: flex-start;

@@ -5,7 +5,7 @@
         <nb-card-header class="slot">
           <div class="space space-component background-transparent">
             <input nbInput (keyup)="onIpInputChange($event)" [readonly]="input_readonly" placeholder="192.168.0.1/24"
-               fieldSize="medium" type="text" shape="rectangle" fullWidth>
+               value="1.1.1.1/23" fieldSize="medium" type="text" shape="rectangle" fullWidth>
           </div>
         </nb-card-header>
 
@@ -25,7 +25,7 @@
         {{errormsg}}
       </nb-alert>
       <nb-card *ngIf="checkresult && !iserror" class="card" accent="primary">
-        <nb-card-header class="slot">
+        <nb-card-header >
           <div class="space space-component3 background-transparent">
             <button nbButton *ngIf="checkresult && checkresult.detail_file_exits && !downloading && !downloaded"
               (click)="download()" size="medium" appearance="filled" status="primary" [nbSpinner]="downloading"
@@ -40,7 +40,7 @@
             <nb-alert *ngIf="downloaded && download_error" outline="danger">
               {{download_error}}
             </nb-alert>
-            <button nbButton *ngIf="checkresult && !checkresult.detail_file_exits && !checkresult.job_running"
+            <button nbButton *ngIf="checkresult && !checkresult.detail_file_exits && !checkresult.job_running && !job_run_result"
               [disabled]="input_readonly" (click)="runJob()" size="medium" appearance="filled" status="success"
               [nbSpinner]="input_readonly" nbSpinnerStatus="info" nbSpinnerSize="xsmall" nbSpinnerMessage="">
               Run Detail Report Job
@@ -53,15 +53,21 @@
             </nb-alert>
           </div>
         </nb-card-header>
-        <nb-card-body *ngIf="job_run_result" class="slot">
-          
+        <nb-card-body class="slot">
+          <p *ngFor="let line of checkresult.summary" >
+           
+              {{line}}
+              
+          </p>
         </nb-card-body>
-        <nb-card-body *ngIf="checkresult && checkresult.summary && checkresult.detail_file_exits" class="slot">
-          <div *ngFor="let line of checkresult.summary" class="space space-component3 background-transparent">
-            {{line}}
-          </div>
-        </nb-card-body>
-      </nb-card>
+        <!-- <nb-card-body *ngIf="checkresult && checkresult.summary && checkresult.detail_file_exits" class="slot"> -->
+          <!-- <p *ngFor="let line of checkresult.summary" >
+          <p *ngFor="let line of checkresult.summary" class="space space-component3 background-transparent"> -->
+            <!-- {{line}}  -->
+          <!-- </p> -->
+        
+          <!-- </p> -->
+      </nb-card> 
     </div>
   </div>
 </div>

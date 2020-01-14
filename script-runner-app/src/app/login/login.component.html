@@ -4,27 +4,27 @@
      
     </div>
     <div class="space space-component col-md-5 background-transparent">
-      <nb-card class="left" accent="primary">
-        <nb-alert  *ngIf="error" outline="danger">
-          {{error}}
-        </nb-alert> 
+      <nb-card class="left" accent="primary">        
         <nb-card-header class="slot">
           <div class="space space-component2 background-transparent">
             <div class="space space-component1 col-md-12 background-transparent">
               <img class="image" src="/assets/images/Admin1.PNG">
             </div>
             <div class="space space-component1 col-md-12 background-transparent">
-              <h5 class="text-basic">Login</h5>
+              <h5>Login</h5>
+              <nb-alert  *ngIf="error" outline="danger">
+                {{error}}
+              </nb-alert> 
             </div>
           </div>
         </nb-card-header>
       
         <nb-card-body class="slot">
           <div class="space space-component col-md-12 background-transparent">
-            <label class="text text-basic label">Email</label>
+            <label class="text label">Email</label>
             <input nbInput [(ngModel)]="username" [readonly]="loading" class="input" placeholder="" fieldSize="medium" type="text" shape="rectangle" fullWidth>          
             
-            <label class="text text-basic label">Password</label>
+            <label class="text label">Password</label>
             <input nbInput [(ngModel)]="password" [readonly]="loading" class="input" placeholder="" fieldSize="medium" type="password" shape="rectangle" fullWidth>
           </div>
         </nb-card-body>
