@@ -25,7 +25,9 @@ def run_cird_sh(cird_ip):
     #     f'docker run -d --rm --network=host -v {cird_script_folder}:/root/bin/NetDetails:rw -w /root/bin/NetDetails --name {sanitized_cird} cidr_runner:latest ./CIDRDetail.sh {cird_ip}'],
     #     shell=True,
     #     stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cird_script_folder).stdout.decode('utf-8')
-
+    os.system('whoami')
+    os.system('pwd')
+    os.system('echo $0')
     return os.system(dok_cmd)
 
     # with cd(cird_script_folder):
