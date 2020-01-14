@@ -39,9 +39,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {}
 
-  onIpInputChange(event) {
-
-   
+  onIpInputChange(event) {   
 
     this.iserror = false;
     this.errormsg = "";
@@ -88,6 +86,7 @@ export class HomeComponent implements OnInit {
     }
 
     this.input_readonly = false;
+    this.ref.detectChanges();
   }
 
   runJob() {

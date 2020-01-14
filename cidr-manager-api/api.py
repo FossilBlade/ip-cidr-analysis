@@ -4,28 +4,14 @@ from flask_json import FlaskJSON, as_json, JsonError, json_response
 from werkzeug.security import safe_str_cmp
 import ipaddress
 import logging
-
+import datetime
 from shell_utils import *
 
 from flask_cors import CORS
 
-
-class User(object):
-    def __init__(self, id, username, password):
-        self.id = id
-        self.username = username
-        self.password = password
-
-    def __str__(self):
-        return "User(id='%s')" % self.id
-
-
 log = logging.getLogger(__name__)
 
-users = [
-    User(1, 'test', 'test'),
-    User(2, 'user2', 'abcxyz'),
-]
+from user_db import users
 
 username_table = {u.username: u for u in users}
 userid_table = {u.id: u for u in users}
@@ -42,9 +28,11 @@ def identity(payload):
     return userid_table.get(user_id, None)
 
 
-app = Flask(__name__)
+app = Flask(__name__,)
 app.debug = True
-app.config['SECRET_KEY'] = 'super-secret'
+app.config["APPLICATION_ROOT"] = "/api"
+app.config['SECRET_KEY'] = '53453453535sdfsdfsafasdf8asdfsdafsadf56asdfadsfdsfasdf'
+app.config['JWT_EXPIRATION_DELTA'] = datetime.timedelta(days=30)
 
 FlaskJSON(app)
 
@@ -101,7 +89,7 @@ def get_report():
     ip_cidr = request.args.get('ipcidr')
 
     file_exists = check_detail_file_exists_for_cird(ip_cidr)
-   
+
     if file_exists:
         return send_file(get_ip_cidr_file_path(ip_cidr),
                          mimetype='text/plain',
