@@ -71,7 +71,8 @@ def run_job():
     if check_detail_file_exists_for_cird(cird_ip):
         return dict(result=run_summary_sh(cird_ip))
     try:
-        run_cird_sh(cird_ip)
+        docker_id = run_cird_sh(cird_ip)
+        log.info(f'Started docker for {cird_ip} - {docker_id}')
     except:
         log.exception('Error Running Job for IP: '+cird_ip)
         raise JsonError(error='Error running the job for IP. Please check with admin.', status_=500)
