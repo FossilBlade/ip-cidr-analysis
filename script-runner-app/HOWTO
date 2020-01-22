@@ -1,0 +1,2 @@
+cd dist
+ssh -i "C:\Users\rs1614\Desktop\FL\script_runner\HS-dev.pem" ubuntu@ec2-3-233-238-221.compute-1.amazonaws.com "rm -rf /tmp/script-runner-app"; scp -i "C:\Users\rs1614\Desktop\FL\script_runner\HS-dev.pem" -r script-runner-app ubuntu@ec2-3-233-238-221.compute-1.amazonaws.com:/tmp && ssh -i "C:\Users\rs1614\Desktop\FL\script_runner\HS-dev.pem" ubuntu@ec2-3-233-238-221.compute-1.amazonaws.com "sudo rm -rf /var/www/html/* && sudo mv /tmp/script-runner-app/* /var/www/html/ && sudo chmod -R 644 /var/www/html/*"
